@@ -35,25 +35,9 @@ Run tests:
 ```cmd
 pytest
 ```
+## Results
+The following are the results of the experiment
+![Project Screenshot](retults/phaseflip_success.png)
 
-## Notes for article writing
 
-- Each run stores metadata (date, shots, idle steps, seed).
-- The metric reported is **logical success probability** (how often decoding matches the intended logical outcome).
-
-## Building the Paper
-
-To generate the LaTeX tables from the experiment results:
-
-```cmd
-python paper/make_tables.py
-```
-
-To compile the PDF using the included Tectonic engine:
-
-```cmd
-tools\tectonic\tectonic.exe paper/main.tex
-```
-
-The output PDF will be at `paper/main.pdf`.
 
