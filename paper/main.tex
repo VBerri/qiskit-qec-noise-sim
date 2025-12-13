@@ -1,0 +1,125 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+\title{Qubit Error Correction in Quantum Computing Simulations}
+
+\author{Sanjeev T \\
+\small Northview High School, Duluth, GA \\
+\small \texttt{sansuvans@gmail.com}}
+\date{December 12, 2025}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Noise causes quantum computations to fail as circuits get longer or as qubits idle.
+This study uses Qiskit Aer noise models to compare a no-correction baseline against repetition-code error correction in regimes dominated by bit-flip (X), phase-flip (Z), and depolarizing noise.
+We report logical success probability as a function of physical error probability $p$ and show that matched repetition coding (distance 3 and 5) substantially improves success relative to an unencoded qubit.
+\end{abstract}
+
+\section{Introduction}
+Quantum states are fragile: errors accumulate with time and with the number of operations.
+Quantum error correction (QEC) combats this by encoding one logical qubit into multiple physical qubits and decoding with redundancy.
+This paper presents a minimal and reproducible comparison of baseline storage versus repetition-code QEC, using simulated noise.
+
+\section{Methods}
+\subsection{Task and metric}
+We study a memory-style task: prepare a target logical state, apply $N$ idle steps (each step is implemented as explicit identity gates), then measure and decode.
+The reported metric is the \emph{logical success probability}: the fraction of shots whose decoded logical bit matches the intended logical value.
+
+\subsection{Error-correction schemes}
+\begin{itemize}
+\item \textbf{Baseline (n=1):} store and measure a single physical qubit.
+\item \textbf{Bit-flip repetition (n=3,5):} encode redundancy in the computational (Z) basis and decode by majority vote.
+\item \textbf{Phase-flip repetition (n=3,5):} encode redundancy in the X basis (equivalently, protect $|+\rangle$ against Z-type errors) and decode by majority vote.
+\end{itemize}
+
+\subsection{Noise models}
+We sweep a physical error probability parameter $p$ and apply noise on each idle-step identity gate.
+Three scenarios are evaluated:
+\begin{itemize}
+\item \textbf{Bit-flip noise:} Pauli X with probability $p$.
+\item \textbf{Phase-flip noise:} Pauli Z with probability $p$.
+\item \textbf{Depolarizing noise:} depolarizing channel with probability $p$.
+\end{itemize}
+
+All experiments use 2000 shots per point and 4 idle steps.
+
+\section{Results}
+\subsection{Bit-flip dominated noise}
+Bit-flip repetition coding improves logical success relative to baseline.
+Table~\ref{tab:bitflip-summary} and Figure~\ref{fig:bitflip} show that the distance-5 repetition code is best across the tested range.
+
+\input{tables/bitflip_summary.tex}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../results/bitflip_success.png}
+  \caption{Bit-flip noise: logical success vs $p$ for baseline and repetition codes.}
+  \label{fig:bitflip}
+\end{figure}
+
+\subsection{Phase-flip dominated noise}
+Phase-flip repetition coding (X-basis) similarly improves performance under Z errors.
+
+\input{tables/phaseflip_summary.tex}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../results/phaseflip_success.png}
+  \caption{Phase-flip noise: logical success vs $p$ for baseline and repetition codes.}
+  \label{fig:phaseflip}
+\end{figure}
+
+\subsection{Depolarizing noise}
+Under depolarizing noise, the best-performing method in this configuration is the X-basis repetition code.
+However, the Z-basis repetition code is not a fair comparator when the stored state is $|+\rangle$; measuring a $|+\rangle$ state in the Z basis is intrinsically random and yields success near 0.5 even at $p=0$.
+
+\input{tables/depolarizing_summary.tex}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../results/depolarizing_success.png}
+  \caption{Depolarizing noise: logical success vs $p$ for baseline and repetition codes in this configuration.}
+  \label{fig:depolarizing}
+\end{figure}
+
+\section{Discussion and limitations}
+Repetition coding improves robustness when the code matches the dominant error mechanism (X vs Z).
+Increasing the code distance from 3 to 5 yields further improvement because a majority vote can correct more errors.
+This work uses simplified, independent noise applied only during idle steps; it does not model full fault-tolerant syndrome extraction or correlated hardware noise.
+
+\section{Reproducibility}
+All code, raw CSV outputs, and plotting scripts are included in the repository.
+
+\section{Conclusion and Next Steps}
+This study demonstrated the efficacy of repetition codes in mitigating specific noise channels.
+Our results show a clear advantage of error correction over the unencoded baseline.
+For example, under bit-flip noise at a physical error rate of $p=0.06$, the distance-5 repetition code maintained a logical success probability of approximately 0.95, whereas the baseline dropped to 0.81.
+We observed that increasing the code distance from 3 to 5 consistently improved logical fidelity under matched noise conditions.
+However, repetition codes are limited to correcting only one type of error (bit-flip or phase-flip) at a time.
+
+Future work will focus on implementing full quantum error correction codes capable of correcting arbitrary single-qubit errors, such as the Shor code \cite{shor1995scheme} or the Steane code \cite{steane1996error}. Additionally, we plan to investigate the performance of topological codes, specifically the surface code \cite{fowler2012surface}, which is a leading candidate for fault-tolerant quantum computing. Finally, validating these simulation results on actual quantum hardware, such as IBM Quantum processors, would provide valuable insights into the impact of realistic, correlated noise sources.
+
+\clearpage
+\begin{thebibliography}{9}
+
+\bibitem{shor1995scheme}
+P.~W. Shor, ``Scheme for reducing decoherence in quantum computer memory,'' \emph{Phys. Rev. A}, vol.~52, pp. R2493--R2496, 1995.
+
+\bibitem{steane1996error}
+A.~M. Steane, ``Error Correcting Codes in Quantum Theory,'' \emph{Phys. Rev. Lett.}, vol.~77, pp. 793--797, 1996.
+
+\bibitem{fowler2012surface}
+A.~G. Fowler, M.~Mariantoni, J.~M. Martinis, and A.~N. Cleland, ``Surface codes: Towards practical large-scale quantum computation,'' \emph{Phys. Rev. A}, vol.~86, p. 032324, 2012.
+
+\bibitem{qiskit}
+Qiskit contributors, ``Qiskit: An Open-source Framework for Quantum Computing,'' 2023.
+
+\end{thebibliography}
+
+\end{document}
