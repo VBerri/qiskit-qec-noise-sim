@@ -37,8 +37,11 @@ pytest
 ```
 ## Results
 The following are the results of the experiment
+## PhaseFlip Result
 ![PhaseFlip Result](results/phaseflip_success.png)
+## BitFlip Result
 ![BitFlip Result](results/bitflip_success.png)
+## Depolarizing Result
 ![Depolarizing Result](results/depolarizing_success.png)
 
 
