@@ -37,7 +37,7 @@ pytest
 ```
 ## Results
 The following are the results of the experiment
-![Project Screenshot](retults/phaseflip_success.png)
+![Project Screenshot](results/phaseflip_success.png)
 
 
 
