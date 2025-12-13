@@ -35,7 +35,7 @@ Run tests:
 ```cmd
 pytest
 ```
-## Results
+# Results
 The following are the results of the experiment
 ## PhaseFlip Result
 ![PhaseFlip Result](results/phaseflip_success.png)
