@@ -20,7 +20,7 @@ var/
 *.egg-info/
 *.egg
 pip-wheel-metadata/
-
+tools/tectonic/
 # Virtual environments
 .venv/
 venv/
