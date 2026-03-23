@@ -20,7 +20,8 @@ var/
 *.egg-info/
 *.egg
 pip-wheel-metadata/
-tools/tectonic/
+uv.lock
+tools/tectonic/*
 # Virtual environments
 .venv/
 venv/
@@ -77,3 +78,6 @@ Thumbs.db
 
 # Paper build directories
 paper/
+
+README_GITHUB.md
+EXECUTIVE_SUMMARY.md
